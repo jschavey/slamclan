@@ -53,6 +53,7 @@ class D3 {
         extract( $params );
 
         if(!isset( $server ) ) $server = 'us';
+        if(!isset( $locale ) ) $locale = 'en_US';
 
         if(!in_array($server, $this->battlenet_servers, true)) {
             $server = 'us';

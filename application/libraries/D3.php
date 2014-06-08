@@ -13,7 +13,7 @@
 *
 */
 
-class Diablo3 {
+class D3 {
     private $battlenet_tag;
     private $host                = '.battle.net';
     private $media_host          = '.media.blizzard.com';
@@ -48,7 +48,12 @@ class Diablo3 {
     private $no_battleTag        = false;
     private $fromCache           = false;
 
-    public function __construct($battlenet_tag = '', $server = 'us', $locale = 'en_US') {
+    public function __construct( $params = array() ) {
+
+        extract( $params );
+
+        if(!isset( $server ) ) $server = 'us';
+
         if(!in_array($server, $this->battlenet_servers, true)) {
             $server = 'us';
         } else if($server == 'cn') {
@@ -90,7 +95,7 @@ class Diablo3 {
         $this->artisan_url   = 'http://'.$server.$this->host.'/api/d3/data/artisan/';
         $this->item_img_url  = 'http://'.$server.$this->media_host.'/d3/icons/items/';
         $this->skill_img_url = 'http://'.$server.$this->media_host.'/d3/icons/skills/';
-        $this->skill_url     = 'http://'.$server.$this->host.'/d3/'.substr($locale, 0, -3).'/tooltip/';
+        $this->skill_url     = 'http://'.$server.$this->host.'/d3/'.substr($params['locale'], 0, -3).'/tooltip/';
         $this->paperdoll_url = 'http://'.$server.$this->host.'/d3/static/images/profile/hero/paperdoll/';
     }
 

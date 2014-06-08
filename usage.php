@@ -29,7 +29,7 @@ ini_set('display_errors', true);
 // $Diablo3 = new Diablo3('', '', 'en_US');
 // $Diablo3 = new Diablo3("XjSv#1677", 'us', 'en_US');
 //
-$Diablo3 = new Diablo3("XjSv#1677");
+$Diablo3 = new Diablo3("emb3r#1997");
 
 // Call Available Methods To Return Data.
 // In this case since we did not provide a BattleTag we will get

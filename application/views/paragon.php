@@ -1,5 +1,5 @@
 <div id="container">
-   <h1>Total Paragon: <?= $paragon ?></h1>
+   <h1>Total Paragon: <?= number_format( $paragon ) ?></h1>
 
    <div id="body">
    		<? foreach( $careers as $career ) : ?>

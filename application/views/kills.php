@@ -1,5 +1,5 @@
 <div id="container">
-   <h1>Lifetime Kills: <?= $kills ?></h1>
+   <h1>Lifetime Kills: <?= number_format( $kills ) ?></h1>
 
    <div id="body">
    		<? foreach( $careers as $career ) : ?>

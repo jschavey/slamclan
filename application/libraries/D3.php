@@ -33,11 +33,11 @@ class D3 {
     private $item_img_sizes      = array('small', 'large');
     private $skill_img_url;
     private $skill_img_sizes     = array('21', '42', '64');
-    private $item_save_loc       = '/Diablo-3-API-PHP/img/items/';       // Relative to DOCUMENT_ROOT
-    private $skills_save_loc     = '/Diablo-3-API-PHP/img/skills/';      // Relative to DOCUMENT_ROOT
-    private $paperdolls_save_loc = '/Diablo-3-API-PHP/img/paperdolls/';  // Relative to DOCUMENT_ROOT
-    private $cache_loc           = '/Diablo-3-API-PHP/cache/';           // Relative to DOCUMENT_ROOT
-    private $use_cache           = true;                                 // Set to true to use 'If-Modified-Since' header
+    private $item_save_loc       = '/slamclan/img/items/';       // Relative to DOCUMENT_ROOT
+    private $skills_save_loc     = '/slamclan/img/skills/';      // Relative to DOCUMENT_ROOT
+    private $paperdolls_save_loc = '/slamclan/img/paperdolls/';  // Relative to DOCUMENT_ROOT
+    private $cache_loc           = '/slamclan/cache/';           // Relative to DOCUMENT_ROOT
+    private $use_cache           = false;                                 // Set to true to use 'If-Modified-Since' header
     private $skill_url;
     private $paperdoll_url;
     private $genders             = array('male', 'female');
@@ -230,8 +230,8 @@ class D3 {
      * Parameters:
      *     (url) - a valid URL
      */
-    private function curlRequest($url) {
-        if(empty($url)) {
+    private function curlRequest($server, $host, $uri) {
+        if(empty($uri)) {
             error_log("URL Cannot Be Empty");
             return false;
         }
@@ -242,7 +242,7 @@ class D3 {
         }
 
         $curl = curl_init();
-        curl_setopt($curl, CURLOPT_URL,            $url);
+        curl_setopt($curl, CURLOPT_URL,            'http://'.$server.$host.$uri);
         curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -260,11 +260,11 @@ class D3 {
         $header = array();
         if($this->authenticate) {
             date_default_timezone_set('GMT');
-            $request_url = str_replace('http://'.$this->current_server.$this->host, '', $url);
+            #$request_url = str_replace('http://'.$this->current_server.$this->host, '', $url);
             $date        = date('D, d M Y G:i:s T', time());
-            $signature   = base64_encode(hash_hmac('sha1', "GET\n".$date."\n".$request_url."\n", $this->API_private_key, true));
+            $signature   = base64_encode(hash_hmac('sha1', "GET\n".$date."\n".$uri."\n", $this->API_private_key, true));
 
-            $header = array("Host: ".$this->current_server.$this->host,
+            $header = array("Host: ".$this->current_server.$host,
                             "Date: ". $date,
                             "\nAuthorization: BNET ".$this->API_public_key.":".$signature."\n");
 
@@ -273,7 +273,7 @@ class D3 {
 
         $file_time = 0;
         if($this->use_cache) {
-            $url_md5    = md5($url);
+            $url_md5    = md5($uri);
             $cache_file = $_SERVER['DOCUMENT_ROOT'].$this->cache_loc.$url_md5;
 
             if(file_exists($cache_file) && is_readable($cache_file)) {
@@ -281,6 +281,7 @@ class D3 {
                 $file_time   = $json_decode['Last-Modified'];
                 $file_data   = $json_decode['Data'];
             } else {
+                error_log( $cache_file );
                 error_log('Cache File Does Not Exist Or Is Not Readable');
             }
 
@@ -297,13 +298,13 @@ class D3 {
         $this->fromCache = false;
 
         if($error_no) {
-            error_log('cURL Error: '.$error_no.' ('.$curl_error.') URL: '.$url);
+            error_log('cURL Error: '.$error_no.' ('.$curl_error.') URL: '.$uri);
             $data = false;
         } else {
             $http_status = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 
             if($http_status >= 400 && $http_status <= 599) {
-                error_log('Error Data Return: '.$data.', HTTP Status Code: '.$http_status.', URL: '.$url);
+                error_log('Error Data Return: '.$data.', HTTP Status Code: '.$http_status.', URL: '.$uri);
                 $data = false;
             } else if($http_status >= 200 && $http_status <= 399) {
                 if($this->use_cache) {
@@ -350,18 +351,23 @@ class D3 {
      * Parameters:
      *     (name) - about this param
      */
-    private function getJsonData($url) {
-        if(empty($url)) return false;
+    private function getJsonData($server, $host, $uri) {
+        if(empty( $server )
+            || empty( $host )
+            || empty( $uri ) )
+        {
+            return false;   
+        }
 
-        $data = $this->curlRequest($url);
+        $data = $this->curlRequest($server, $host, $uri);
 
         if(!empty($data)) $data = json_decode($data, true);
 
         if(isset($data['code']) && isset($data['reason'])) {
             if(in_array($data['code'], $this->blizzardErrors, true)) {
-                error_log('API Fail Reason: '.$data['reason'].', Code: '.$data['code'].' URL: '.$url);
+                error_log('API Fail Reason: '.$data['reason'].', Code: '.$data['code'].' URL: '.$uri);
             } else {
-                error_log('API Fail Reason Unknown, URL: '.$url);
+                error_log('API Fail Reason Unknown, URL: '.$uri);
             }
             $data = false;
         }
@@ -532,16 +538,14 @@ class D3 {
     /**
      * getCareer
      * Gets career data
-     *
+     * # 
      */
-    public function getCareer() {
-        if($this->no_battleTag) {
-            error_log('Function not available without a BattleTag.');
-            return false;
-        } else {
-            $data = $this->getJsonData($this->career_url.'?locale='.$this->current_locale);
-            return json_decode($data);
-        }
+    public function getCareer( $server, $host, $battlenet_tag, $locale ) {
+
+        $uri = '/api/d3/profile/'.$battlenet_tag.'/';
+
+        $data = $this->getJsonData( $server, $host, $uri );
+        return json_decode($data);
     }
 
     /**

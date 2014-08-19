@@ -75,6 +75,18 @@ class Slammers extends Front_Controller {
 			'server'	=> 'us',
 			'locale'	=> 'en_US'
 		];
+		$slammers[] = [
+			'host' 		=> '.battle.net',
+			'battlenet_tag' => 'Bearnaked-1299',
+			'server' 	=> 'us',
+			'locale' 	=> 'en_US'
+		];
+		$slammers[] = [
+			'host' 		=> '.battle.net',
+			'battlenet_tag' => 'Zoller-1555',
+			'server' 	=> 'us',
+			'locale' 	=> 'en_US'
+		];
 
 		return $slammers;
 	}

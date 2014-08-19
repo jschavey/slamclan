@@ -96,7 +96,7 @@ class D3 {
         $this->artisan_url   = 'http://'.$server.$this->host.'/api/d3/data/artisan/';
         $this->item_img_url  = 'http://'.$server.$this->media_host.'/d3/icons/items/';
         $this->skill_img_url = 'http://'.$server.$this->media_host.'/d3/icons/skills/';
-        $this->skill_url     = 'http://'.$server.$this->host.'/d3/'.substr($params['locale'], 0, -3).'/tooltip/';
+        $this->skill_url     = 'http://'.$server.$this->host.'/d3/'.substr($locale, 0, -3).'/tooltip/';
         $this->paperdoll_url = 'http://'.$server.$this->host.'/d3/static/images/profile/hero/paperdoll/';
     }
 
@@ -365,6 +365,8 @@ class D3 {
             }
             $data = false;
         }
+
+        $data = json_encode($data); # get JSON data should return JSON data @johnschavey
 
         return $data;
     }

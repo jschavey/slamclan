@@ -1,0 +1,3 @@
+<pre>
+<? echo $career ?>
+</pre>

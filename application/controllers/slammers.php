@@ -32,12 +32,16 @@ class Slammers extends Front_Controller {
 			$careers[] = $career;
 		}unset( $slammer );
 
+		uasort( $careers, array($this, '_rankKills'));
 
 		$data['kills'] 		= $kills;
 		$data['paragon'] 	= $paragon;
 		$data['careers'] 	= $careers;
 
 		$this->template->write_view( 'content', 'kills', $data );
+
+		uasort( $careers , array( $this, '_rankParagon' ) );
+		$data['careers'] 	= $careers;
 		$this->template->write_view( 'content', 'paragon', $data );
 
 		$this->template->render();
@@ -73,5 +77,22 @@ class Slammers extends Front_Controller {
 		];
 
 		return $slammers;
+	}
+
+	private function _rankKills($a, $b)
+	{
+	    if ($a->kills->monsters == $b->kills->monsters) {
+	        return 0;
+	    }
+	    return ($a->kills->monsters > $b->kills->monsters) ? -1 : 1;
+	}
+
+	private function _rankParagon( $a, $b )
+	{
+		if( $a->paragonLevel == $b->paragonLevel )
+		{
+			return 0;
+		}
+		return ( $a->paragonLevel > $b->paragonLevel ) ? -1 : 1;
 	}
 }

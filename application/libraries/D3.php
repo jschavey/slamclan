@@ -37,7 +37,7 @@ class D3 {
     private $skills_save_loc     = '/slamclan/img/skills/';      // Relative to DOCUMENT_ROOT
     private $paperdolls_save_loc = '/slamclan/img/paperdolls/';  // Relative to DOCUMENT_ROOT
     private $cache_loc           = '/slamclan/cache/';           // Relative to DOCUMENT_ROOT
-    private $use_cache           = false;                                 // Set to true to use 'If-Modified-Since' header
+    private $use_cache           = true;                                 // Set to true to use 'If-Modified-Since' header
     private $skill_url;
     private $paperdoll_url;
     private $genders             = array('male', 'female');

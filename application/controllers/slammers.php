@@ -16,6 +16,7 @@ class Slammers extends Front_Controller {
 
 		$careers 	= array();
 		$kills 		= 0;
+		$paragon 	= 0;
 
 		foreach( $slammers as $slammer )
 		{
@@ -27,14 +28,17 @@ class Slammers extends Front_Controller {
 			}
 
 			$kills += $career->kills->monsters;
+			$paragon += $career->paragonLevel;
 			$careers[] = $career;
 		}unset( $slammer );
 
 
 		$data['kills'] 		= $kills;
+		$data['paragon'] 	= $paragon;
 		$data['careers'] 	= $careers;
 
 		$this->template->write_view( 'content', 'kills', $data );
+		$this->template->write_view( 'content', 'paragon', $data );
 
 		$this->template->render();
 	}

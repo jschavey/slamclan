@@ -540,7 +540,7 @@ class D3 {
             return false;
         } else {
             $data = $this->getJsonData($this->career_url.'?locale='.$this->current_locale);
-            return $data;
+            return json_decode($data);
         }
     }
 
@@ -560,7 +560,7 @@ class D3 {
 
             $data = $this->getJsonData($this->hero_url.$hero_id.'?locale='.$this->current_locale);
 
-            return $data;
+            return json_decode($data);
         }
     }
 
@@ -579,7 +579,7 @@ class D3 {
 
         $data = $this->getJsonData($this->item_url.$item_data.'?locale='.$this->current_locale);
 
-        return $data;
+        return json_decode($data);
     }
 
     /**
@@ -597,7 +597,7 @@ class D3 {
 
         $data = $this->getJsonData($this->item_url.'item/'.$item_id.'?locale='.$this->current_locale);
 
-        return $data;
+        return json_decode($data);
     }
 
     /**
@@ -615,7 +615,7 @@ class D3 {
 
         $data = $this->getJsonData($this->follower_url.$follower_type.'?locale='.$this->current_locale);
 
-        return $data;
+        return json_decode($data);
     }
 
     /**
@@ -633,7 +633,7 @@ class D3 {
 
         $data = $this->getJsonData($this->artisan_url.$artisan_type.'?locale='.$this->current_locale);
 
-        return $data;
+        return json_decode($data);
     }
 
     public function __desctruct() {

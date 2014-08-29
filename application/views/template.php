@@ -7,6 +7,7 @@
    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+   <link rel="stylesheet" href="http://bootswatch.com/slate/bootstrap.min.css">
    
    <style>
    html {
@@ -18,7 +19,7 @@
       margin-bottom: 30px;
    }
    body > .container {
-      padding: 60px 15px 0;
+      padding: 120px 15px 0;
    }
    .footer {
       position: absolute;
@@ -26,7 +27,6 @@
       width: 100%;
       /* Set the fixed height of the footer here */
       height: 30px;
-      background-color: #f5f5f5;
       padding-top: 5px;
    }
    </style>

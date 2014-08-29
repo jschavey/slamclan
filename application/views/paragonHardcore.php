@@ -1,11 +1,11 @@
-<div class="panel panel-default">
+<div class="panel panel-danger">
    <div class="panel-heading">
-      <h1 class="panel-title" data-toggle="collapse" data-target="#paragon">
+      <h1 class="panel-title" data-toggle="collapse" data-target="#paragonHardcore">
          Total Hardcore Paragon: <?= number_format( $paragonHardcore ) ?>
       </h1>
    </div>
 
-   <div id="paragon" class="collapse panel-body">
+   <div id="paragonHardcore" class="collapse panel-body">
       <? foreach( $careers as $career ) : ?>
       	<div class="row">
       		<div class="col-md-2">

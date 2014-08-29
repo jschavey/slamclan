@@ -6,10 +6,6 @@
    </div>
 
    <div id="paragon" class="collapse panel-body">
-      <div class="alert alert-danger" role="alert">
-         Paragon API broken by 2.1 patch
-      </div>
-
       <? foreach( $careers as $career ) : ?>
       	<div class="row">
       		<div class="col-md-2">

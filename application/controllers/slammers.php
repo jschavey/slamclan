@@ -29,20 +29,26 @@ class Slammers extends Front_Controller {
 
 			$kills += $career->kills->monsters;
 			$paragon += $career->paragonLevel;
+			$paragonHardcore += $career->paragonLevelHardcore;
 			$careers[] = $career;
 		}unset( $slammer );
 
 		uasort( $careers, array($this, '_rankKills'));
 
-		$data['kills'] 		= $kills;
-		$data['paragon'] 	= $paragon;
-		$data['careers'] 	= $careers;
+		$data['kills'] 				= $kills;
+		$data['paragon'] 			= $paragon;
+		$data['paragonHardcore'] 	= $paragonLevelHardcore;
+		$data['careers'] 			= $careers;
 
 		$this->template->write_view( 'content', 'kills', $data );
 
 		uasort( $careers , array( $this, '_rankParagon' ) );
 		$data['careers'] 	= $careers;
 		$this->template->write_view( 'content', 'paragon', $data );
+
+		uasort( $careers, array( $this, '_rankHardcoreParagon' ) );
+		$data['careers'] 	= $careers;
+		$this->template->write_view( 'content', 'paragonHardcore', $data );
 
 		$this->template->render();
 	}
@@ -106,5 +112,14 @@ class Slammers extends Front_Controller {
 			return 0;
 		}
 		return ( $a->paragonLevel > $b->paragonLevel ) ? -1 : 1;
+	}
+
+	private function _rankHardcoreParagon( $a, $b )
+	{
+		if( $a->paragonLevelHardcore == $b->paragonLevelHardcore )
+		{
+			return 0;
+		}
+		return ( $a->paragonLevelHardcore > $b->paragonLevelHardcore ) ? -1 : 1;
 	}
 }

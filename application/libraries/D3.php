@@ -361,19 +361,6 @@ class D3 {
 
         $data = $this->curlRequest($server, $host, $uri);
 
-        if(!empty($data)) $data = json_decode($data, true);
-
-        if(isset($data['code']) && isset($data['reason'])) {
-            if(in_array($data['code'], $this->blizzardErrors, true)) {
-                error_log('API Fail Reason: '.$data['reason'].', Code: '.$data['code'].' URL: '.$uri);
-            } else {
-                error_log('API Fail Reason Unknown, URL: '.$uri);
-            }
-            $data = false;
-        }
-
-        $data = json_encode($data); # get JSON data should return JSON data @johnschavey
-
         return $data;
     }
 
@@ -555,17 +542,15 @@ class D3 {
      * Parameters:
      *     (hero_id) - Hero ID (integer)
      */
-    public function getHero($hero_id = null) {
-        if($this->no_battleTag) {
-             error_log('Function not available without a BattleTag.');
-             return false;
-        } else {
-            if(empty($hero_id) || !preg_match('/^[0-9]+$/', $hero_id)) return 'Invalid/Empty Hero Id';
+    public function getHero( $server, $host, $battlenet_tag, $hero_id = null)
+    {
+        #if(empty($hero_id) || !preg_match('/^[0-9]+$/', $hero_id)) return 'Invalid/Empty Hero Id';
 
-            $data = $this->getJsonData($this->hero_url.$hero_id.'?locale='.$this->current_locale);
+        $uri = '/api/d3/profile/'.$battlenet_tag.'/hero/'.$hero_id;
 
-            return json_decode($data);
-        }
+        $data = $this->getJsonData( $server, $host, $uri );
+
+        return json_decode($data);
     }
 
     /**

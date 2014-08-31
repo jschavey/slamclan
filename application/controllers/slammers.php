@@ -30,6 +30,10 @@ class Slammers extends Front_Controller {
 				exit( 'Call to getCareer failed.' );
 			}
 
+			$career->battlenet_tag = $battlenet_tag;
+			$career->server = $server;
+			$career->host 	= $host;
+
 			$kills 				+= $career->kills->monsters;
 			$paragon 			+= $career->paragonLevel;
 			$paragonHardcore 	+= $career->paragonLevelHardcore;
@@ -68,6 +72,19 @@ class Slammers extends Front_Controller {
 		uasort( $heroes, array( $this, '_rankSeason' ) );
 		$data['heroes'] 	= $heroes;
 		$this->template->write_view( 'content', 'seasonal', $data );
+
+		$heroes = array();
+		foreach( $careers as $career )
+		{
+			foreach( $career->heroes as $hero )
+			{
+				$hero_obj = $this->d3->getHero( $career->server, $career->host, $career->battlenet_tag, $hero->id );
+				$heroes[] = $hero_obj;
+			}
+		}
+
+		$data['heroes'] = $heroes;
+		$this->template->write_view( 'content', 'heroes', $data );
 
 		$this->template->render();
 	}

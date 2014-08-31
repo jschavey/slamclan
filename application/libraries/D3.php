@@ -560,13 +560,11 @@ class D3 {
      * Parameters:
      *     (item_data) - String of item data (e.g. 'item/COGHsoAIEgcIBBXIGEoRHYQRdRUdnWyzFB2qXu51MA04kwNAAFAKYJMD')
      */
-    public function getItem($item_data = null) {
-        if(empty($item_data)) {
-            error_log('Item Data Cannot Be Empty');
-            return false;
-        }
+    public function getItem($server, $host, $battlenet_tag, $item_data = null) {
+  
+        $uri = '/api/d3/data/'.$item_data;
 
-        $data = $this->getJsonData($this->item_url.$item_data.'?locale='.$this->current_locale);
+        $data = $this->getJsonData( $server, $host, $uri );
 
         return json_decode($data);
     }

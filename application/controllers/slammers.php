@@ -2,8 +2,10 @@
 
 class Slammers extends Front_Controller {
 
-	public function index()
+	public function __construct()
 	{
+		parent::__construct();
+
 		$init_config = [
 			'battlenet_tag' => 'emb3r#1997',
 			'server'	=> 'us',
@@ -11,7 +13,10 @@ class Slammers extends Front_Controller {
 		];
 
 		$this->load->library('d3', $init_config);
-	
+	}
+
+	public function index()
+	{	
 		$slammers = $this->_configureSlammers();
 
 		$careers 			= array();
@@ -73,18 +78,50 @@ class Slammers extends Front_Controller {
 		$data['heroes'] 	= $heroes;
 		$this->template->write_view( 'content', 'seasonal', $data );
 
+		$this->template->render();
+	}
+
+	public function items()
+	{
+		$slammers = $this->_configureSlammers();
+
+		foreach( $slammers as $slammer )
+		{
+			extract( $slammer );
+
+			if( ! $career = $this->d3->getCareer( $server, $host, $battlenet_tag, $locale ) )
+			{
+				exit( 'Call to getCareer failed.' );
+			}
+
+			$career->battlenet_tag 	= $battlenet_tag;
+			$career->server 		= $server;
+			$career->host 			= $host;
+
+			$careers[] 			= $career;
+		}unset( $slammer );
+
 		$heroes = array();
+		$items 	= array();
 		foreach( $careers as $career )
 		{
 			foreach( $career->heroes as $hero )
 			{
 				$hero_obj = $this->d3->getHero( $career->server, $career->host, $career->battlenet_tag, $hero->id );
 				$heroes[] = $hero_obj;
+				foreach( $hero_obj->items as $item )
+				{
+					$item = $this->d3->getItem( $career->server, $career->host, $career->battlenet_tag, $item->tooltipParams );
+					$items[] = $item;
+				}
 			}
 		}
 
 		$data['heroes'] = $heroes;
-		$this->template->write_view( 'content', 'heroes', $data );
+		#$this->template->write_view( 'content', 'heroes', $data );
+
+		$data['items'] = $items;
+		$this->template->write_view( 'content', 'items', $data );
 
 		$this->template->render();
 	}

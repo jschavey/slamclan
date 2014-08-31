@@ -15,9 +15,11 @@ class Slammers extends Front_Controller {
 		$slammers = $this->_configureSlammers();
 
 		$careers 			= array();
+		$heroes 			= array();
 		$kills 				= 0;
 		$paragon 			= 0;
 		$paragonHardcore 	= 0;
+		$seasons 			= 0;
 
 		foreach( $slammers as $slammer )
 		{
@@ -28,19 +30,31 @@ class Slammers extends Front_Controller {
 				exit( 'Call to getCareer failed.' );
 			}
 
-			$kills += $career->kills->monsters;
-			$paragon += $career->paragonLevel;
-			$paragonHardcore += $career->paragonLevelHardcore;
-			$careers[] = $career;
+			$kills 				+= $career->kills->monsters;
+			$paragon 			+= $career->paragonLevel;
+			$paragonHardcore 	+= $career->paragonLevelHardcore;
+
+			foreach( $career->heroes as $hero )
+			{
+				if( $hero->seasonal )
+				{
+					$seasons++;
+				}
+				$hero->battleTag = $career->battleTag;
+				$heroes[] 		 = $hero;
+			}
+			$careers[] 			= $career;
 		}unset( $slammer );
 
-		uasort( $careers, array($this, '_rankKills'));
+		/* Global Stats */
 
 		$data['kills'] 				= $kills;
 		$data['paragon'] 			= $paragon;
 		$data['paragonHardcore'] 	= $paragonHardcore;
-		$data['careers'] 			= $careers;
+		$data['seasons'] 			= $seasons;
 
+		uasort( $careers, array($this, '_rankKills'));
+		$data['careers'] 			= $careers;
 		$this->template->write_view( 'content', 'kills', $data );
 
 		uasort( $careers , array( $this, '_rankParagon' ) );
@@ -50,6 +64,10 @@ class Slammers extends Front_Controller {
 		uasort( $careers, array( $this, '_rankHardcoreParagon' ) );
 		$data['careers'] 	= $careers;
 		$this->template->write_view( 'content', 'paragonHardcore', $data );
+
+		uasort( $heroes, array( $this, '_rankSeason' ) );
+		$data['heroes'] 	= $heroes;
+		$this->template->write_view( 'content', 'seasonal', $data );
 
 		$this->template->render();
 	}
@@ -122,5 +140,14 @@ class Slammers extends Front_Controller {
 			return 0;
 		}
 		return ( $a->paragonLevelHardcore > $b->paragonLevelHardcore ) ? -1 : 1;
+	}
+
+	private function _rankSeason( $a, $b )
+	{
+		if( $a->level == $b->level )
+		{
+			return 0;
+		}
+		return ( $a->level > $b->level ) ? -1 : 1;
 	}
 }

@@ -21,14 +21,6 @@
    body > .container {
       padding: 120px 15px 0;
    }
-   .footer {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      /* Set the fixed height of the footer here */
-      height: 30px;
-      padding-top: 5px;
-   }
    </style>
 
 </head>
@@ -68,12 +60,6 @@
                <?= $content ?>
             </div>
          </div>
-      </div>
-   </div>
-
-   <div class="footer">
-      <div class="container">
-         <p>Page rendered in <strong>{elapsed_time}</strong> seconds. <?php echo  (ENVIRONMENT === 'development') ?  'CodeIgniter Version <strong>' . CI_VERSION . '</strong>' : '' ?></p>
       </div>
    </div>
 

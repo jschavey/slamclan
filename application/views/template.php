@@ -60,6 +60,10 @@
                <?= $content ?>
             </div>
          </div>
+
+         <div class="panel-footer">
+            {elapsed_time} seconds and {memory_usage}
+         </div>
       </div>
    </div>
 

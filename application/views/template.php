@@ -25,47 +25,33 @@
 
 </head>
 <body>
-
-   <!-- Fixed navbar -->
-   <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-      <div class="container">
-         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-               <span class="sr-only">Toggle navigation</span>
-               <span class="icon-bar"></span>
-               <span class="icon-bar"></span>
-               <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Slam Clan</a>
-         </div>
-         <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav">
-               <li class="active"><a href="#">Stats</a></li>
-            </ul>
-         </div><!--/.nav-collapse -->
-      </div>
-   </div>
-
-   <div class="container">
-      <div class="panel panel-default">
-         <div class="panel-heading">
-            <h1 class="panel-title">
-               Clan Statistics
-            </h1>
-         </div>
-
-         <div class="panel-body">
-            <p>Click a statistic for member contribution rankings.</p>
-            <div class="panel-group" id="accordion">
-               <?= $content ?>
+<!-- Fixed navbar -->
+    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">Slam Clan</a>
             </div>
-         </div>
+            <div class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">Stats</a></li>
+                </ul>
+            </div><!--/.nav-collapse -->
+        </div>
+    </div>
 
-         <div class="panel-footer">
-            {elapsed_time} seconds and {memory_usage}
-         </div>
-      </div>
-   </div>
+    <div class="container">
+        <?= $content ?>
+    </div>
+
+    <div class="footer">
+    {elapsed_time} seconds and {memory_usage}
+    </div>
 
 </body>
 </html>

@@ -51,6 +51,15 @@ class Slammers extends Front_Controller {
 				}
 				$hero->battleTag = $career->battleTag;
 				$heroes[] 		 = $hero;
+                if( $hero->id == $career->lastHeroPlayed )
+                {
+                    $last_seen  = DateTime::createFromFormat( 'U', $hero->{'last-updated'} );
+                    #print_r( DateTime::getLastErrors );
+                    $now        = new DateTime;
+                    $interval   = $last_seen->diff( $now );
+                    print_r( $interval );
+                    $career->lastSeen = $interval;
+                }
 			}
 			$careers[] 			= $career;
 		}unset( $slammer );
@@ -62,21 +71,32 @@ class Slammers extends Front_Controller {
 		$data['paragonHardcore'] 	= $paragonHardcore;
 		$data['seasons'] 			= $seasons;
 
+        $data['stats'] = '';
+        
 		uasort( $careers, array($this, '_rankKills'));
 		$data['careers'] 			= $careers;
-		$this->template->write_view( 'content', 'kills', $data );
+		$data['stats'] .= $this->load->view( 'kills', $data, true );
 
 		uasort( $careers , array( $this, '_rankParagon' ) );
 		$data['careers'] 	= $careers;
-		$this->template->write_view( 'content', 'paragon', $data );
+		$data['stats'] .= $this->load->view( 'paragon', $data, true );
 
 		uasort( $careers, array( $this, '_rankHardcoreParagon' ) );
 		$data['careers'] 	= $careers;
-		$this->template->write_view( 'content', 'paragonHardcore', $data );
+		$data['stats'] .= $this->load->view( 'paragonHardcore', $data, true );
 
 		uasort( $heroes, array( $this, '_rankSeason' ) );
 		$data['heroes'] 	= $heroes;
-		$this->template->write_view( 'content', 'seasonal', $data );
+		$data['stats'] .= $this->load->view( 'seasonal', $data, true );
+        
+        $stats = $this->load->view('stats', $data, true);
+        
+        uasort( $careers, array( $this, '_rankActivity' ) );
+        $data['careers'] = $careers;
+        $activity = $this->load->view('activity', $data, true);
+        
+        $this->template->write('content', $stats);
+        $this->template->write('content', $activity);
 
 		$this->template->render();
 	}
@@ -209,4 +229,9 @@ class Slammers extends Front_Controller {
 		}
 		return ( $a->level > $b->level ) ? -1 : 1;
 	}
+    
+    private function _rankActivity( $a, $b )
+    {
+        return ( $a->lastSeen < $b->lastSeen ) ? -1 : 1;
+    }
 }

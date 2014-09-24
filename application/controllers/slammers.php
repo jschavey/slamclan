@@ -54,10 +54,8 @@ class Slammers extends Front_Controller {
                 if( $hero->id == $career->lastHeroPlayed )
                 {
                     $last_seen  = DateTime::createFromFormat( 'U', $hero->{'last-updated'} );
-                    #print_r( DateTime::getLastErrors );
                     $now        = new DateTime;
                     $interval   = $last_seen->diff( $now );
-                    print_r( $interval );
                     $career->lastSeen = $interval;
                 }
 			}
